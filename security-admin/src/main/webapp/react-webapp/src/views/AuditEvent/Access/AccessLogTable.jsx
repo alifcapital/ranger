@@ -162,6 +162,27 @@ export const AccessLogTable = ({ data = {} }) => {
               </td>
             </tr>
           )}
+        {!ServiceRequestDataRangerAcl.includes(serviceType) &&
+          !ServiceRequestDataHadoopAcl.includes(serviceType) &&
+          !isEmpty(requestData) && (
+            <tr>
+              <td>Request Data</td>
+              <td>
+                <Button
+                  className="float-end link-tag query-icon btn btn-sm"
+                  size="sm"
+                  variant="link"
+                  title="Copy"
+                  onClick={() =>
+                    navigator.clipboard.writeText(copyText(requestData))
+                  }
+                >
+                  <i className="fa-fw fa fa-copy"> </i>
+                </Button>
+                <span>{requestData}</span>
+              </td>
+            </tr>
+          )}
         <tr>
           <td>Access Type</td>
           <td>{!isEmpty(accessType) ? accessType : "--"}</td>

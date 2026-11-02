@@ -530,6 +530,21 @@ function AccessLogs() {
         minWidth: 180
       },
       {
+        Header: "Request Data",
+        accessor: "requestData",
+        Cell: (rawValue) => {
+          if (!isEmpty(rawValue?.value)) {
+            return (
+              <div className="text-truncate" title={rawValue.value}>
+                {rawValue.value}
+              </div>
+            );
+          } else return "--";
+        },
+        minWidth: 200,
+        disableSortBy: true
+      },
+      {
         Header: "Access Type",
         accessor: "accessType",
         Cell: (rawValue) => {
@@ -843,6 +858,12 @@ function AccessLogs() {
       category: "policyId",
       label: "Policy ID",
       urlLabel: "policyID",
+      type: "text"
+    },
+    {
+      category: "requestData",
+      label: "Request Data",
+      urlLabel: "requestData",
       type: "text"
     },
     {
