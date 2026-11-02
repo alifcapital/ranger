@@ -30,7 +30,9 @@ RANGER_ADMIN_HEAP_SIZE=${RANGER_ADMIN_HEAP_SIZE:-$RANGER_ADMIN_HEAP_DEFAULT_SIZE
 echo "Using heap size ${RANGER_ADMIN_HEAP_SIZE}"
 
 # Define JAVA_OPTS
-JAVA_OPTS=" ${JAVA_OPTS} -XX:MetaspaceSize=100m -XX:MaxMetaspaceSize=200m -Xmx${RANGER_ADMIN_HEAP_SIZE} -Xms${RANGER_ADMIN_HEAP_SIZE} -Xloggc:${RANGER_ADMIN_LOG_DIR}/gc-worker.log -verbose:gc -XX:+PrintGCDetails "
+# We run Ranger Admin on JDK 17, where -Xloggc and -XX:+PrintGCDetails are replaced by unified logging,
+# so the GC log goes through -Xlog to the same file, with rotation.
+JAVA_OPTS=" ${JAVA_OPTS} -XX:MetaspaceSize=100m -XX:MaxMetaspaceSize=200m -Xmx${RANGER_ADMIN_HEAP_SIZE} -Xms${RANGER_ADMIN_HEAP_SIZE} -Xlog:gc*:file=${RANGER_ADMIN_LOG_DIR}/gc-worker.log:time,uptime,level,tags:filecount=10,filesize=20M "
 
 # Construct CLASSPATH
 CLASSPATH="${RANGER_ADMIN_CONF}:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/classes/:${SQL_CONNECTOR_JAR}:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/classes/lib/*:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/classes/META-INF:${RANGER_ADMIN_HOME}/ews/webapp/WEB-INF/lib/*:${RANGER_ADMIN_HOME}/ews/webapp/META-INF:${RANGER_ADMIN_HOME}/ews/lib/*:${JAVA_HOME}/lib/*"

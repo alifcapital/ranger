@@ -54,7 +54,9 @@ then
 	RANGER_ADMIN_LOG_DIR=${XAPOLICYMGR_EWS_DIR}/logs
 fi
 
-JAVA_OPTS=" ${JAVA_OPTS} -XX:MetaspaceSize=100m -XX:MaxMetaspaceSize=200m -Xmx${ranger_admin_max_heap_size} -Xms1g -Xloggc:${RANGER_ADMIN_LOG_DIR}/gc-worker.log -verbose:gc -XX:+PrintGCDetails"
+# We run Ranger Admin on JDK 17, where -Xloggc and -XX:+PrintGCDetails are replaced by unified logging,
+# so the GC log goes through -Xlog to the same file, with rotation.
+JAVA_OPTS=" ${JAVA_OPTS} -XX:MetaspaceSize=100m -XX:MaxMetaspaceSize=200m -Xmx${ranger_admin_max_heap_size} -Xms1g -Xlog:gc*:file=${RANGER_ADMIN_LOG_DIR}/gc-worker.log:time,uptime,level,tags:filecount=10,filesize=20M"
 if [[ ${JAVA_OPTS} != *"-Duser.timezone"* ]] ;then  export JAVA_OPTS=" ${JAVA_OPTS} -Duser.timezone=UTC" ;fi
 
 if [ -z "${RANGER_ADMIN_LOGBACK_CONF_FILE}" ]
